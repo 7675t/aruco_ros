@@ -61,6 +61,7 @@ private:
   std::string reference_frame_;
   double marker_size_;
   bool rotate_marker_axis_;
+  bool allow_marker_duplication_;
 
   // ROS pub-sub
   ros::NodeHandle nh_;
@@ -97,6 +98,7 @@ public:
       nh_.param<std::string>("reference_frame", reference_frame_, "");
       nh_.param<std::string>("camera_frame", camera_frame_, "");
       nh_.param<bool>("rotate_marker_axis", rotate_marker_axis_, true);
+      nh_.param<bool>("allow_marker_duplication", allow_marker_duplication_, false);
       ROS_ASSERT(not (camera_frame_.empty() and not reference_frame_.empty()));
       if(reference_frame_.empty())
         reference_frame_ = camera_frame_;
@@ -171,7 +173,7 @@ public:
         markers_.clear();
 
         //Ok, let's detect
-        mDetector_.detect(inImage_, markers_, camParam_, marker_size_, false);
+        mDetector_.detect(inImage_, markers_, camParam_, marker_size_, false, allow_marker_duplication_);
 
         // marker array publish
         if(publishMarkers)
